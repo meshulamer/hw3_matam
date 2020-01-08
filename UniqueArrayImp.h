@@ -9,7 +9,8 @@
 #define NO_FREE_INDEX -1
 
 template <class Element, class Compare>
-UniqueArray<Element, Compare>::UniqueArray(unsigned int size) : size(size), array(new Element*[size]) {
+UniqueArray<Element, Compare>::UniqueArray(unsigned int size) :size(size) {
+    array = new Element*[size];
     for(int i=0 ; i<size ; i++){
         array[i] = nullptr;
     }
@@ -18,8 +19,10 @@ template <class Element, class Compare>
 UniqueArray<Element, Compare>::UniqueArray(const UniqueArray& other) : array(new Element*[other.size]), size(other.size) {
     for(int i=0 ; i < size; i++) {
         if(other.array[i] == nullptr) array[i] = nullptr;
-        array[i] = new Element(*(other.array[i]));
-        *(array[i]) = *(other.array[i]);
+        else {
+            array[i] = new Element(*(other.array[i]));
+        }
+        //     *(array[i]) = *(other.array[i]);
     }
 }
 template <class Element, class Compare>
@@ -31,9 +34,10 @@ UniqueArray<Element, Compare>::~UniqueArray() {
 template <class Element, class Compare>
 unsigned int UniqueArray<Element, Compare>::insert(const Element& element) {
     int freeIndex = NO_FREE_INDEX;
-    for(int currentIndex = 0; currentIndex < size; currentIndex++) {
-        if(array[currentIndex] == nullptr) freeIndex = currentIndex;
-        else if(Compare(), *(array[currentIndex]) == element) return currentIndex;
+    Compare compare;
+    for(int currentindex = 0; currentindex < size; currentindex++) {
+        if(array[currentindex] == nullptr) freeIndex = currentindex;
+        else if(compare(*(array[currentindex]), element)) return currentindex;
     }
     if(freeIndex == NO_FREE_INDEX) throw UniqueArrayIsFullException();
     array[freeIndex] = new Element(element);
@@ -41,9 +45,10 @@ unsigned int UniqueArray<Element, Compare>::insert(const Element& element) {
 }
 template <class Element, class Compare>
 bool UniqueArray<Element, Compare>::getIndex(const Element& element, unsigned int& index) const {
-    for(int currentIndex =0; currentIndex < size; currentIndex++) {
-        if(Compare(), *(array[currentIndex]) == element) {
-            index = currentIndex;
+    Compare compare;
+    for(int currentindex =0; currentindex < size; currentindex++) {
+        if((array[currentindex] != nullptr) && (compare(*(array[currentindex]), element))) {
+            index = currentindex;
             return true;
         }
     }
@@ -63,7 +68,6 @@ bool UniqueArray<Element, Compare>::remove(const Element& element) {
     array[index] = nullptr;
     return true;
 }
-
 template <class Element, class Compare>
 unsigned int UniqueArray<Element, Compare>::getCount() const {
     int counter = 0;
@@ -79,4 +83,17 @@ unsigned int UniqueArray<Element, Compare>::getSize() const {
     return size;
 }
 
+template <class Element, class Compare>
+UniqueArray<Element, Compare> UniqueArray<Element, Compare>::filter(const Filter& f) const {
+    UniqueArray* newarray = new UniqueArray(this->size);
+    for(int currentindex = 0; currentindex < size ; currentindex++) {
+        if((array[currentindex] != nullptr)&&(f(*(array[currentindex])))) {
+            (*newarray).array[currentindex] = new Element(*(array[currentindex]));
+        }
+        else {
+            (*newarray).array[currentindex] = nullptr;
+        }
+    }
+    return *newarray;
+}
 #endif //HW3_UNIQUEARRAYIMP_H
