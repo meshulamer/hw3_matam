@@ -28,8 +28,9 @@ UniqueArray<Element, Compare>::UniqueArray(const UniqueArray& other) : array(new
 template <class Element, class Compare>
 UniqueArray<Element, Compare>::~UniqueArray() {
     for(int i=0; i<size; i++) {
-        delete array[i];
+        if(array[i] != nullptr) delete array[i];
     }
+    delete[] array;
 }
 template <class Element, class Compare>
 unsigned int UniqueArray<Element, Compare>::insert(const Element& element) {
@@ -85,15 +86,15 @@ unsigned int UniqueArray<Element, Compare>::getSize() const {
 
 template <class Element, class Compare>
 UniqueArray<Element, Compare> UniqueArray<Element, Compare>::filter(const Filter& f) const {
-    UniqueArray* newarray = new UniqueArray(this->size);
+    UniqueArray newarray = UniqueArray(this->size);
     for(int currentindex = 0; currentindex < size ; currentindex++) {
         if((array[currentindex] != nullptr)&&(f(*(array[currentindex])))) {
-            (*newarray).array[currentindex] = new Element(*(array[currentindex]));
+            newarray.array[currentindex] = new Element(*(array[currentindex]));
         }
         else {
-            (*newarray).array[currentindex] = nullptr;
+            newarray.array[currentindex] = nullptr;
         }
     }
-    return *newarray;
+    return newarray;
 }
 #endif //HW3_UNIQUEARRAYIMP_H

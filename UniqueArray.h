@@ -4,8 +4,8 @@
 template <class Element, class Compare = std::equal_to<Element>>
 class UniqueArray {
 private:
-    Element **array;
-    const unsigned int size;
+    Element **array; // array that holds pointers to elements
+    const unsigned int size; // array maximun size, doesn't change during run time
 public:
 
     UniqueArray(unsigned int size);
