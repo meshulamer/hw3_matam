@@ -3,4 +3,4 @@ project(hw3_matam)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(hw3_matam UniqueArray.h UniqueArrayImp.h tests/UniqueArrayTest.cpp)
+add_executable(hw3_matam UniqueArray.h UniqueArrayImp.h OurUATests.cpp)

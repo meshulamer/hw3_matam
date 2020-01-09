@@ -10,7 +10,7 @@ namespace ParkingLotUtils {
 
     /**
      * @brief Represents a Parking Spot (Block + Number) of a Vehicle.
-     * 
+     *
      */
     class ParkingSpot {
     public:

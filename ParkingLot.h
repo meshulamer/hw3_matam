@@ -4,13 +4,45 @@
 #include "ParkingLotTypes.h"
 #include "Time.h"
 #include "ParkingSpot.h"
+#include "UniqueArray.h"
+#include <string.h>
 
+using namespace ParkingLotUtils;
+typedef UniqueArray<ParkingSpot, void> ParkingArray; //Do we need a compare func?
 namespace MtmParkingLot {
 
     using namespace ParkingLotUtils;
     using std::ostream;
+    class ParkedCar{
+    protected:
+        const string plate_num;
+        const Time start time;
+        bool fined;
+        virtual int calc_payment;
+    };
+    class Motorbike : public Parked_Car{
+    private:
+        const VehicleType type;
+        int calc_payment{};
 
+    };
+    class Handicapped : public Parked_Car{
+    private:
+        const vehicle_type;
+        int calc_payment{};
+
+    };
+    class PrivateCar : public Parked_Car{
+    private:
+        const vehicle_type;
+        int calc_payment{};
+
+    };
     class ParkingLot {
+    private:
+        Vec
+        ParkingArray parking_array;
+
     public:
 
         ParkingLot(unsigned int parkingBlockSizes[]);
