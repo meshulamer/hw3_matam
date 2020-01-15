@@ -18,20 +18,13 @@ public:
     bool remove(const Element& element);
     unsigned int getCount() const;
     unsigned int getSize() const;
-    const Element* operator[] (const unsigned int index) const;
+    Element* operator[] (const unsigned int index) const;
 
     class Filter {
     public:
         virtual bool operator() (const Element&) const = 0;
     };
-
-    class ForEach {
-    public:
-        virtual void operator() (Element&, const) const =0;
-    };
-
     UniqueArray filter(const Filter& f) const;
-    UniqueArray forEach(const ForEach& f) const;
     class UniqueArrayIsFullException{};
     
 };

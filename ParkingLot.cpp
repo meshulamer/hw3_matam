@@ -43,33 +43,32 @@ ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate lic
             new_parked_car.setParkingSpot(park_here, parking_spots[park_here]);
             parking_array.insert(new_parked_car);
             parking_spots[park_here]--;
-            ParkingLotPrinter::printVehicle(new_parked_car.type, new_parked_car.plate_num, new_parked_car.start_time);
-            ParkingLotPrinter::printEntrySuccess(std::cout, new_parked_car.parking_spot);
-    }
+            ParkingLotPrinter::printVehicle(std::cout, new_parked_car.getVehicleType(), new_parked_car.getPlateNum(), new_parked_car.getTime());
+            ParkingLotPrinter::printEntrySuccess(std::cout, new_parked_car.getParkingSpot());
     return SUCCESS;
 }
 
 ParkingResult ParkingLot::exitParking(LicensePlate licensePlate, Time exitTime){
-    ParkedVehicle *exitingVehicle = ParkingArray[licensePlateToVehicle(licensePlate)];
+    ParkedVehicle const *exitingVehicle = parking_array[licensePlateToVehicle(licensePlate)];
     if(exitingVehicle == nullptr) {
-        ParkingLotPrinter::printExitFailure(cout, licensePlate);
+        ParkingLotPrinter::printExitFailure(std::cout, licensePlate);
         return VEHICLE_NOT_FOUND;
     }
-    Time total_time = exitTime - (*exitingVehicle)->start_time;
-    int total_payment = (*exitingVehicle).calc_payment(exitTime);
+    Time total_time = exitTime - (*exitingVehicle).getTime();
+    int total_payment = (*exitingVehicle).price_calc(exitTime);
     ParkedVehicle about_to_exit = *exitingVehicle;
     parking_array.remove(*exitingVehicle);
-    parking_spots[about_to_exit.parking_spot.getParkingBlock()]++;
-    ParkingLotPrinter::printVehicle(cout, about_to_exit.type, about_to_exit.plate_num,
-            about_to_exit.start_time);
-    ParkingLotPrinter::printExitSuccess(cout, about_to_exit.parking_spot , exitTime , total_payment);
-    return EXIT_SUCCESS
+    parking_spots[about_to_exit.getParkingSpot().getParkingBlock()]++;
+    ParkingLotPrinter::printVehicle(std::cout, about_to_exit.getVehicleType(), about_to_exit.getPlateNum(),
+            about_to_exit.getTime());
+    ParkingLotPrinter::printExitSuccess(std::cout, about_to_exit.getParkingSpot() , exitTime , total_payment);
+    return SUCCESS;
 }
 
 ParkingResult ParkingLot::getParkingSpot(LicensePlate licensePlate, ParkingSpot &parkingSpot) const{
-    ParkedVehicle *vehicle = ParkingArray[licensePlateToVehicle(licensePlate)];
+    ParkedVehicle const *vehicle = parking_array[licensePlateToVehicle(licensePlate)];
     if(vehicle == nullptr) return VEHICLE_NOT_FOUND;
-    parkingSpot = (*vehicle).parking_spot;
+    parkingSpot = (*vehicle).getParkingSpot();
     return SUCCESS;
 }
 
@@ -84,9 +83,9 @@ ParkingResult ParkingLot::getParkingSpot(LicensePlate licensePlate, ParkingSpot 
     }
 }*/
 
-friend ostream ParkingLot::&operator<<(ostream &os, const ParkingLot &parkingLot);
+ostream ParkingLot::&operator<<(ostream &os, const ParkingLot &parkingLot);
 
-static unsigned int ParkingLot::total_parking_spots(unsigned int array[]) {
+unsigned int ParkingLot::total_parking_spots(unsigned int array[]) {
     return (array[0] + array[1] + array[2]);
 }
 static bool CarAlreadyParked(ParkedVehicle vehicle, ParkingArray array){

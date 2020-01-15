@@ -14,8 +14,7 @@
 #define DAY 24
 using namespace ParkingLotUtils;
 class ParkedVehicle{
-    friend class ParkingLot;
-protected:
+private:
     const VehicleType type;
     const string plate_num;
     const Time start_time;
@@ -27,7 +26,11 @@ public:
     ParkedVehicle(LicensePlate licensePlate);
     bool operator==(const ParkedVehicle& vehicle) const;
     void setParkingSpot(const VehicleType type, const unsigned int index);
+    int price_calc(Time exit_time) const;
     ParkingSpot getParkingSpot() const;
+    const VehicleType getVehicleType() const;
+    const string getPlateNum() const;
+    const Time getTime() const;
 };
-
+ParkedVehicle licensePlateToVehicle(LicensePlate licensePlate);
 #endif //MTM_PARKED_VEHICLE_H

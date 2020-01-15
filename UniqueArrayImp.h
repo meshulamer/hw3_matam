@@ -22,7 +22,6 @@ UniqueArray<Element, Compare>::UniqueArray(const UniqueArray& other) : array(new
         else {
             array[i] = new Element(*(other.array[i]));
         }
-        //     *(array[i]) = *(other.array[i]);
     }
 }
 template <class Element, class Compare>
@@ -62,7 +61,7 @@ const Element* UniqueArray<Element, Compare>:: operator[] (const Element& elemen
     return array[index];
 }
 template <class Element, class Compare>
-const Element* UniqueArray<Element,Compare>::operator[] (const unsigned int index) const{
+Element* UniqueArray<Element,Compare>::operator[] (const unsigned int index) const{
     if(index < 0 || index >=size) return nullptr;
     else return array[index];
 }
