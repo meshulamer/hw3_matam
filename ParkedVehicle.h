@@ -31,6 +31,8 @@ public:
     const VehicleType getVehicleType() const;
     const string getPlateNum() const;
     const Time getTime() const;
+    void giveTicket();
+    bool isFined() const;
 };
 ParkedVehicle licensePlateToVehicle(LicensePlate licensePlate);
 #endif //MTM_PARKED_VEHICLE_H

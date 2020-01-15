@@ -5,26 +5,23 @@
 
 using namespace MtmParkingLot;
 
-/*class giveTickets : public UniqueArray::forEach {
-public:
-    virtual void operator() (ParkedVehicle &vehicle, Time inspection_time) const override {
-        if()
-    }
-};
-*/
-ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]):parking_array(total_parking_spots(parkingBlockSizes)){
-    for(int i=0; i<NUMBER_OF_UNIQUE_CARS; i++){
-        parking_spots[i] = parkingBlockSizes[i];
-    }
+ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]):
+    total_num_of_motorbike_spots(parkingBlockSizes[MOTORBIKE]),
+    total_num_of_car_spots(parkingBlockSizes[CAR]),
+    total_num_of_handicapped_spots(parkingBlockSizes[HANDICAPPED]),
+    parking_array(parkingBlockSizes[1]+parkingBlockSizes[2]+parkingBlockSizes[3]){
+        for(int i=0; i<NUMBER_OF_UNIQUE_CARS; i++){
+            parking_spots[i] = parkingBlockSizes[i];
+        }
 }
 ParkingLot::~ParkingLot() = default;
 
 ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime){
             bool has_spot = true;
             ParkedVehicle new_parked_car(vehicleType, licensePlate, entranceTime);
-            if (CarAlreadyParked(new_parked_car, parking_array)) {
+            if (parking_array[new_parked_car] != nullptr) {
                 ParkingLotPrinter::printEntryFailureAlreadyParked(std::cout,
-                                                                  (*(parking_array[new_parked_car])).getParkingSpot());
+                        (*(parking_array[new_parked_car])).getParkingSpot());
                 return VEHICLE_ALREADY_PARKED;
             }
             VehicleType park_here = HANDICAPPED;
@@ -72,32 +69,52 @@ ParkingResult ParkingLot::getParkingSpot(LicensePlate licensePlate, ParkingSpot 
     return SUCCESS;
 }
 
-/*void ParkingLot::inspectParkingLot(Time inspectionTime) {
-    ParkedVehicle test_vehicle(CAR,"TestCar", inspectionTime);
-    ParkedVehicle* car_to_fine;
-    car_to_fine = parking_array[test_vehicle];
-    while(car_to_fine!= nullptr){
-        test_vehicle(wtfisthisthing);
+void ParkingLot::inspectParkingLot(Time inspectionTime) {
+    int ticketed_cars = 0;
+    for(int i=0; i<parking_array.getSize(); i++){
+        if(parking_array[i] == nullptr) continue;
+        ParkedVehicle& inspected_car = *(parking_array[i]);
+        Time total_parking_time = inspectionTime - inspected_car.getTime();
+        if((!inspected_car.isFined()) && (total_parking_time.toHours() > DAY)){
+            inspected_car.giveTicket();
+            ticketed_cars++;
+        }
+    }
+        ParkingLotPrinter::printInspectionResult(std::cout, inspectionTime, ticketed_cars);
+}
 
+ostream& operator<<(ostream& os, const ParkingLot& parkingLot){
+    ParkingLotPrinter::printParkingLotTitle(os);
+    ParkedVehicle* print_array[parkingLot.parking_array.getSize()];
+    for(int i=0; i < (parkingLot.parking_array.getSize()); i++)
+    {
+        ParkedVehicle* const vehicle = parkingLot.parking_array[i];
+        if(vehicle == nullptr){
+            print_array[i] = nullptr;
+            continue;
+        }
+        switch(vehicle->getParkingSpot().getParkingBlock()){
+            case MOTORBIKE:{
+                print_array[vehicle->getParkingSpot().getParkingNumber()] = vehicle;
+            }
+            case HANDICAPPED:{
+                int index_shift = (parkingLot.total_num_of_motorbike_spots);
+                print_array[vehicle->getParkingSpot().getParkingNumber()+ index_shift];
+            }
+            case CAR:{
+                int index_shift = (parkingLot.total_num_of_motorbike_spots +
+                        parkingLot.total_num_of_handicapped_spots);
+                print_array[vehicle->getParkingSpot().getParkingNumber()+ index_shift];
+            }
+        }
+    }
+    for(int i=0; i < (parkingLot.parking_array.getSize()); i++) {
+        if (print_array[i] == nullptr) continue;
+        ParkingLotPrinter::printVehicle(os, (*print_array[i]).getVehicleType(), (*print_array[i]).getPlateNum(),
+                                        (*print_array[i]).getTime());
+        ParkingLotPrinter::printParkingSpot(os, (*print_array[i]).getParkingSpot());
 
     }
-}*/
+    return os;
 
-ostream ParkingLot::&operator<<(ostream &os, const ParkingLot &parkingLot);
-
-unsigned int ParkingLot::total_parking_spots(unsigned int array[]) {
-    return (array[0] + array[1] + array[2]);
 }
-static bool CarAlreadyParked(ParkedVehicle vehicle, ParkingArray array){
-    unsigned int index = -1;
-    array.getIndex(vehicle,index);
-    if (index == -1) return false;
-    return true;
-}
-
-/*ParkedVehicle licensePlateToVehicle(LicensePlate licensePlate) {
-    ParkedVehicle newVehicle(licensePlate);
-    return newVehicle;
-}
-*/
-//friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);

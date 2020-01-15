@@ -67,3 +67,10 @@ int ParkedVehicle::price_calc(Time exit_time) const {
     }
     return total_price;
 }
+
+void ParkedVehicle::giveTicket(){
+    fined = true;
+}
+bool ParkedVehicle::isFined() const{
+    return fined;
+}

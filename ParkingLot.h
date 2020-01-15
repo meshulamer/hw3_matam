@@ -16,20 +16,20 @@ namespace MtmParkingLot {
     using std::ostream;
     class ParkingLot {
     private:
-        int parking_spots[NUMBER_OF_UNIQUE_CARS] ;
+        int parking_spots[NUMBER_OF_UNIQUE_CARS];
+        const unsigned int total_num_of_motorbike_spots;
+        const unsigned int total_num_of_handicapped_spots;
+        const unsigned int total_num_of_car_spots;
         ParkingArray parking_array;
 
     public:
-        ParkingLot(unsigned int parkingBlockSizes[]);
+        explicit ParkingLot(unsigned int parkingBlockSizes[]);
         ~ParkingLot();
         ParkingResult enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
         ParkingResult exitParking(LicensePlate licensePlate, Time exitTime);
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
         void inspectParkingLot(Time inspectionTime);
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
-        static unsigned int total_parking_spots(unsigned int array[]);
-        static bool CarAlreadyParked(ParkedVehicle vehicle, ParkingArray array);
-        static ParkedVehicle& buildVehicle(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
     };
 
 }
