@@ -62,6 +62,12 @@ const Element* UniqueArray<Element, Compare>:: operator[] (const Element& elemen
     return array[index];
 }
 template <class Element, class Compare>
+const Element* UniqueArray<Element,Compare>::operator[] (const unsigned int index) const{
+    if(index < 0 || index >=size) return nullptr;
+    else return array[index];
+}
+
+template <class Element, class Compare>
 bool UniqueArray<Element, Compare>::remove(const Element& element) {
     unsigned int index = 0;
     if(!getIndex(element, index)) return false;
@@ -98,10 +104,4 @@ UniqueArray<Element, Compare> UniqueArray<Element, Compare>::filter(const Filter
     return newarray;
 }
 
-template <class Element, class Compare>
-UniqueArray<Element, Compare> UniqueArray<Element, Compare>::forEach(const ForEach& f) const {
-    for(int i=0; i<size; i++){
-        f(*array[i]);
-    }
-}
 #endif //HW3_UNIQUEARRAYIMP_H
