@@ -6,6 +6,7 @@
 #include "UniqueArray.h"
 #include <string.h>
 #include "ParkedVehicle.h"
+#include "ParkingLotPrinter.h"
 #define NUMBER_OF_UNIQUE_CARS 3
 #define FINE_AMOUNT 250
 
@@ -15,7 +16,6 @@ namespace MtmParkingLot {
     using namespace ParkingLotUtils;
     using std::ostream;
     class ParkingLot {
-    private:
         int parking_spots[NUMBER_OF_UNIQUE_CARS];
         const unsigned int total_num_of_motorbike_spots;
         const unsigned int total_num_of_handicapped_spots;
@@ -33,5 +33,6 @@ namespace MtmParkingLot {
     };
 
 }
+
 
 #endif //MTMPARKINGLOT_PARKINGLOT_H
