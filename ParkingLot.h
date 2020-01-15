@@ -9,15 +9,14 @@
 #define NUMBER_OF_UNIQUE_CARS 3
 #define FINE_AMOUNT 250
 
-typedef UniqueArray <ParkedVehicle, ParkedVehicle::operator==(const ParkedVehicle& vehicle) const> ParkingArray;
+typedef UniqueArray <ParkedVehicle, std::equal_to<ParkedVehicle>> ParkingArray;
 namespace MtmParkingLot {
 
     using namespace ParkingLotUtils;
     using std::ostream;
     class ParkingLot {
     private:
-        int[NUMBER_OF_UNIQUE_CARS] parking_spots;
-        const int[NUMBER_OF_UNIQUE_CARS] ;
+        int parking_spots[NUMBER_OF_UNIQUE_CARS] ;
         ParkingArray parking_array;
 
     public:
@@ -28,8 +27,9 @@ namespace MtmParkingLot {
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
         void inspectParkingLot(Time inspectionTime);
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
-        ParkingArray filterFinedVehicles(ParkingArray parking_array);
-
+        static unsigned int total_parking_spots(unsigned int array[]);
+        static bool CarAlreadyParked(ParkedVehicle vehicle, ParkingArray array);
+        static ParkedVehicle& buildVehicle(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
     };
 
 }

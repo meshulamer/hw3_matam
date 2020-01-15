@@ -3,6 +3,7 @@
 
 #include "ParkingSpot.h"
 #include "ParkingLotTypes.h"
+#include "Time.h"
 
 #define ONE_HOUR_PAYMENT_PRIVATE_CAR 20
 #define ONE_HOUR_PAYMENT_MOTORBIKE 10
@@ -11,7 +12,7 @@
 #define ABOVE_ONE_HOUR_PAYMENT_MOTORBIKE 5
 #define MAXIMUM_PARKING_TIME_IN_HOURS 6
 #define DAY 24
-
+using namespace ParkingLotUtils;
 class ParkedVehicle{
     friend class ParkingLot;
 protected:
@@ -20,29 +21,13 @@ protected:
     const Time start_time;
     bool fined;
     ParkingSpot parking_spot;
-    virtual int calc_payment(const Time exit_time) const = 0;
+    int generic_price_calc(Time total_time, int first_hour, int next_hours, bool handicapped, bool ticket);
 public:
     ParkedVehicle(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
     ParkedVehicle(LicensePlate licensePlate);
     bool operator==(const ParkedVehicle& vehicle) const;
     void setParkingSpot(const VehicleType type, const unsigned int index);
+    ParkingSpot getParkingSpot() const;
 };
-class Motorbike : public ParkedVehicle{
-private:
-    int calc_payment(const Time exit_time) const override;
-
-};
-class Handicapped : public ParkedVehicle{
-private:
-    int calc_payment(const Time exit_time) const override;
-
-};
-class PrivateCar : public ParkedVehicle{
-private:
-    int calc_payment(const Time exit_time) const override;
-
-};
-
-int generic_price_calc(Time total_time, int first_hour, int next_hours, bool handicapped, bool ticket);
 
 #endif //MTM_PARKED_VEHICLE_H
