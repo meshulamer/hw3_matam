@@ -23,11 +23,19 @@ public:
     public:
         virtual bool operator() (const Element&) const = 0;
     };
-    UniqueArray filter(const Filter& f) const;
 
+    class ForEach {
+    public:
+        virtual void operator() (Element&, const) const =0;
+    };
+
+    UniqueArray filter(const Filter& f) const;
+    UniqueArray forEach(const ForEach& f) const;
     class UniqueArrayIsFullException{};
     
 };
+
+
 
 
 #include "UniqueArrayImp.h"

@@ -97,4 +97,11 @@ UniqueArray<Element, Compare> UniqueArray<Element, Compare>::filter(const Filter
     }
     return newarray;
 }
+
+template <class Element, class Compare>
+UniqueArray<Element, Compare> UniqueArray<Element, Compare>::forEach(const ForEach& f) const {
+    for(int i=0; i<size; i++){
+        f(*array[i]);
+    }
+}
 #endif //HW3_UNIQUEARRAYIMP_H
