@@ -81,7 +81,7 @@ namespace MtmParkingLot {
 
     ostream &operator<<(ostream &os, const ParkingLot &parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(os);
-        ParkedVehicle *print_array[parkingLot.parking_array.getSize()];
+        ParkedVehicle **print_array = new ParkedVehicle*[parkingLot.parking_array.getSize()];
         for(int i=0; i<parkingLot.parking_array.getSize(); i++){
             print_array[i] = nullptr;
         }
@@ -113,6 +113,7 @@ namespace MtmParkingLot {
             ParkingLotPrinter::printParkingSpot(os, (*print_array[i]).getParkingSpot());
 
         }
+        delete[] print_array;
         return os;
 
     }

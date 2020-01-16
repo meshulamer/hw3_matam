@@ -11,6 +11,7 @@
 #define ABOVE_ONE_HOUR_PAYMENT_PRIVATE_CAR 10
 #define ABOVE_ONE_HOUR_PAYMENT_MOTORBIKE 5
 #define MAXIMUM_PARKING_TIME_IN_HOURS 6
+#define FINE_AMOUNT 250
 #define DAY 24
 using namespace ParkingLotUtils;
 class ParkedVehicle{

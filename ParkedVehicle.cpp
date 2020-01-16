@@ -1,6 +1,4 @@
 #include "ParkedVehicle.h"
-#include "ParkingSpot.h"
-#include "ParkingLot.h"
 
 using namespace ParkingLotUtils;
 bool ParkedVehicle::operator==(const ParkedVehicle& vehicle) const{

@@ -8,7 +8,6 @@
 #include "ParkedVehicle.h"
 #include "ParkingLotPrinter.h"
 #define NUMBER_OF_UNIQUE_CARS 3
-#define FINE_AMOUNT 250
 
 typedef UniqueArray <ParkedVehicle, std::equal_to<ParkedVehicle>> ParkingArray;
 namespace MtmParkingLot {
