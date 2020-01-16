@@ -28,6 +28,7 @@ template <class Element, class Compare>
 UniqueArray<Element, Compare>::~UniqueArray() {
     for(int i=0; i<size; i++) {
         if(array[i] != nullptr) delete array[i];
+        array[i] = nullptr;
     }
     delete[] array;
 }

@@ -44,13 +44,16 @@ int ParkedVehicle::price_calc(Time exit_time) const {
     int payment_per_hour = 0;
     int payment_for_first_hour =0;
     switch(type){
-        case MOTORBIKE:{
-            payment_for_first_hour = ONE_HOUR_PAYMENT_MOTORBIKE;
-            payment_per_hour = ABOVE_ONE_HOUR_PAYMENT_MOTORBIKE;
-        }
+
         case CAR:{
             payment_for_first_hour = ONE_HOUR_PAYMENT_PRIVATE_CAR;
             payment_per_hour = ABOVE_ONE_HOUR_PAYMENT_PRIVATE_CAR;
+            break;
+        }
+        case MOTORBIKE:{
+            payment_for_first_hour = ONE_HOUR_PAYMENT_MOTORBIKE;
+            payment_per_hour = ABOVE_ONE_HOUR_PAYMENT_MOTORBIKE;
+            break;
         }
     }
     if(total_time.toHours() == 0) return 0;

@@ -18,8 +18,7 @@ namespace MtmParkingLot {
         bool has_spot = true;
         ParkedVehicle new_parked_car(vehicleType, licensePlate, entranceTime);
         if (parking_array[new_parked_car] != nullptr) {
-            ParkingLotPrinter::printEntryFailureAlreadyParked(std::cout,
-                                                              (*(parking_array[new_parked_car])).getParkingSpot());
+            MtmParkingLot::printEntry(*(parking_array[new_parked_car]),VEHICLE_ALREADY_PARKED);
             return VEHICLE_ALREADY_PARKED;
         }
         VehicleType park_here = HANDICAPPED;
@@ -32,15 +31,13 @@ namespace MtmParkingLot {
             park_here = vehicleType;
         }
         if (!has_spot) {
-            ParkingLotPrinter::printEntryFailureNoSpot(std::cout);
+            MtmParkingLot::printEntry(new_parked_car,NO_EMPTY_SPOT);
             return NO_EMPTY_SPOT;
         }
         new_parked_car.setParkingSpot(park_here, parking_spots[park_here]);
         parking_array.insert(new_parked_car);
         parking_spots[park_here]--;
-        ParkingLotPrinter::printVehicle(std::cout, new_parked_car.getVehicleType(), new_parked_car.getPlateNum(),
-                                        new_parked_car.getTime());
-        ParkingLotPrinter::printEntrySuccess(std::cout, new_parked_car.getParkingSpot());
+        MtmParkingLot::printEntry(new_parked_car,SUCCESS);
         return SUCCESS;
     }
 
@@ -85,24 +82,27 @@ namespace MtmParkingLot {
     ostream &operator<<(ostream &os, const ParkingLot &parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(os);
         ParkedVehicle *print_array[parkingLot.parking_array.getSize()];
+        for(int i=0; i<parkingLot.parking_array.getSize(); i++){
+            print_array[i] = nullptr;
+        }
         for (int i = 0; i < (parkingLot.parking_array.getSize()); i++) {
             ParkedVehicle *const vehicle = parkingLot.parking_array[i];
-            if (vehicle == nullptr) {
-                print_array[i] = nullptr;
-                continue;
-            }
+            if (vehicle == nullptr) continue;
             switch (vehicle->getParkingSpot().getParkingBlock()) {
                 case MOTORBIKE: {
                     print_array[vehicle->getParkingSpot().getParkingNumber() -1] = vehicle;
+                    break;
                 }
                 case HANDICAPPED: {
                     unsigned int index_shift = (parkingLot.total_num_of_motorbike_spots);
                     print_array[(vehicle->getParkingSpot().getParkingNumber() + index_shift -1)]= vehicle;
+                    break;
                 }
                 case CAR: {
                     unsigned int index_shift = (parkingLot.total_num_of_motorbike_spots +
                                        parkingLot.total_num_of_handicapped_spots -1);
                     print_array[vehicle->getParkingSpot().getParkingNumber() + index_shift]= vehicle;
+                    break;
                 }
             }
         }
@@ -115,5 +115,26 @@ namespace MtmParkingLot {
         }
         return os;
 
+    }
+}
+
+void MtmParkingLot::printEntry(ParkedVehicle vehicle, ParkingResult result){
+    ParkingLotPrinter::printVehicle(std::cout, vehicle.getVehicleType(), vehicle.getPlateNum(),
+                                    vehicle.getTime());
+    switch(result){
+
+        case SUCCESS:{
+            ParkingLotPrinter::printEntrySuccess(std::cout, vehicle.getParkingSpot());
+            break;
+        }
+        case NO_EMPTY_SPOT:{
+            ParkingLotPrinter::printEntryFailureNoSpot(std::cout);
+            break;
+        }
+        case VEHICLE_ALREADY_PARKED:{
+            ParkingLotPrinter::printEntryFailureAlreadyParked(std::cout,
+                                                              (vehicle).getParkingSpot());
+            break;
+        }
     }
 }
