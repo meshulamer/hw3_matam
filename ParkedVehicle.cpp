@@ -2,19 +2,16 @@
 
 using namespace ParkingLotUtils;
 bool ParkedVehicle::operator==(const ParkedVehicle& vehicle) const{
-    if(this->plate_num == vehicle.plate_num) return true;
-    return false;
+    return this->plate_num == vehicle.plate_num;
 }
 
-/*bool ParkedVehicle::operator==(const class ParkedVehicle & vehicle) const{
-    if(fined == vehicle.fined && (inspection_time-start_time).toHours() > DAY) return true;
-    return false;
-}*/
 ParkedVehicle::ParkedVehicle(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime):
     type(vehicleType), plate_num(licensePlate), start_time(entranceTime){
     fined = false;
 }
-ParkedVehicle::ParkedVehicle(LicensePlate licensePlate): plate_num(licensePlate), type(FIRST), start_time() {}
+ParkedVehicle::ParkedVehicle(LicensePlate licensePlate): type(FIRST), plate_num(licensePlate),  start_time() {
+    fined = false;
+}
 
 void ParkedVehicle::setParkingSpot(const VehicleType type, const unsigned int index){
     ParkingSpot spot(type , index);
@@ -53,6 +50,9 @@ int ParkedVehicle::price_calc(Time exit_time) const {
             payment_per_hour = ABOVE_ONE_HOUR_PAYMENT_MOTORBIKE;
             break;
         }
+        case HANDICAPPED:{
+            break;
+        }
     }
     if(total_time.toHours() == 0) return 0;
     if(fined) total_price += FINE_AMOUNT;
@@ -74,4 +74,8 @@ void ParkedVehicle::giveTicket(){
 }
 bool ParkedVehicle::isFined() const{
     return fined;
+}
+
+bool spotSort(ParkedVehicle vehicle1 , ParkedVehicle vehicle2){
+    return vehicle1.getParkingSpot()< vehicle2.getParkingSpot();
 }

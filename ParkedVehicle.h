@@ -13,6 +13,7 @@
 #define MAXIMUM_PARKING_TIME_IN_HOURS 6
 #define FINE_AMOUNT 250
 #define DAY 24
+
 using namespace ParkingLotUtils;
 class ParkedVehicle{
 private:
