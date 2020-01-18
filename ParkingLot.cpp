@@ -1,5 +1,5 @@
 #include "ParkingLot.h"
-
+#include <vector>
 namespace MtmParkingLot {
 
     ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) :

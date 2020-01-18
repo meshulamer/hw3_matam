@@ -13,8 +13,8 @@ ParkedVehicle::ParkedVehicle(LicensePlate licensePlate): type(FIRST), plate_num(
     fined = false;
 }
 
-void ParkedVehicle::setParkingSpot(const VehicleType type, const unsigned int index){
-    ParkingSpot spot(type , index);
+void ParkedVehicle::setParkingSpot(const VehicleType parking_spot_type, const unsigned int index){
+    ParkingSpot spot(parking_spot_type , index);
     parking_spot = spot;
 }
 ParkingSpot ParkedVehicle::getParkingSpot() const {
@@ -78,4 +78,8 @@ bool ParkedVehicle::isFined() const{
 
 bool spotSort(ParkedVehicle vehicle1 , ParkedVehicle vehicle2){
     return vehicle1.getParkingSpot()< vehicle2.getParkingSpot();
+}
+
+bool operator< (const ParkedVehicle& vehicle1, const ParkedVehicle& vehicle2){
+    return (vehicle1.getParkingSpot() < vehicle2.getParkingSpot());
 }

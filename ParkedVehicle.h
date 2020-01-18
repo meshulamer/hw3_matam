@@ -22,12 +22,11 @@ private:
     const Time start_time;
     bool fined;
     ParkingSpot parking_spot;
-    int generic_price_calc(Time total_time, int first_hour, int next_hours, bool handicapped, bool ticket);
 public:
     ParkedVehicle(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
     ParkedVehicle(LicensePlate licensePlate);
     bool operator==(const ParkedVehicle& vehicle) const;
-    void setParkingSpot(const VehicleType type, const unsigned int index);
+    void setParkingSpot(VehicleType parking_spot_type, unsigned int index);
     int price_calc(Time exit_time) const;
     ParkingSpot getParkingSpot() const;
     const VehicleType getVehicleType() const;
@@ -36,5 +35,6 @@ public:
     void giveTicket();
     bool isFined() const;
 };
+bool operator< (const ParkedVehicle& vehicle1, const ParkedVehicle& vehicle2);
 ParkedVehicle licensePlateToVehicle(LicensePlate licensePlate);
 #endif //MTM_PARKED_VEHICLE_H

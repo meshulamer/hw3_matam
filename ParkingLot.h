@@ -31,6 +31,7 @@ namespace MtmParkingLot {
         void inspectParkingLot(Time inspectionTime);
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
         unsigned int pickParkingIndex(VehicleType park_here);
+        
     };
     void printEntry(const ParkedVehicle& vehicle ,ParkingResult result);
 }
