@@ -24,7 +24,13 @@ private:
     ParkingSpot parking_spot;
 public:
     ParkedVehicle(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
-    ParkedVehicle(LicensePlate licensePlate);
+    explicit ParkedVehicle(LicensePlate licensePlate);
+    ~ParkedVehicle() = default;
+    struct areVehiclesTheSame {
+        bool operator()(const ParkedVehicle &v1, const ParkedVehicle &v2) const {
+            return (v1.plate_num == v2.plate_num);
+        }
+    };
     bool operator==(const ParkedVehicle& vehicle) const;
     void setParkingSpot(VehicleType parking_spot_type, unsigned int index);
     int price_calc(Time exit_time) const;
@@ -34,7 +40,9 @@ public:
     const Time getTime() const;
     void giveTicket();
     bool isFined() const;
+    ParkedVehicle& operator=(const ParkedVehicle& vehicle);
+    friend bool operator< (const ParkedVehicle& vehicle1, const ParkedVehicle& vehicle2);
 };
-bool operator< (const ParkedVehicle& vehicle1, const ParkedVehicle& vehicle2);
+
 ParkedVehicle licensePlateToVehicle(LicensePlate licensePlate);
 #endif //MTM_PARKED_VEHICLE_H

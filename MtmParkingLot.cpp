@@ -1,6 +1,5 @@
 #include "ParkingLotTypes.h"
 #include "Time.h"
-#include "ParkingLotPrinter.h"
 #include "ParkingLot.h"
 
 #include <iostream>

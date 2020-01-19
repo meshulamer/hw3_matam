@@ -76,10 +76,12 @@ bool ParkedVehicle::isFined() const{
     return fined;
 }
 
-bool spotSort(ParkedVehicle vehicle1 , ParkedVehicle vehicle2){
-    return vehicle1.getParkingSpot()< vehicle2.getParkingSpot();
+bool operator< (const ParkedVehicle& vehicle1, const ParkedVehicle& vehicle2){
+    return (vehicle1.parking_spot < vehicle2.parking_spot);
 }
 
-bool operator< (const ParkedVehicle& vehicle1, const ParkedVehicle& vehicle2){
-    return (vehicle1.getParkingSpot() < vehicle2.getParkingSpot());
+ParkedVehicle& ParkedVehicle::operator=(const ParkedVehicle& vehicle){
+    setParkingSpot(vehicle.parking_spot.getParkingBlock(),vehicle.parking_spot.getParkingNumber());
+    fined = vehicle.fined;
+    return *this;
 }

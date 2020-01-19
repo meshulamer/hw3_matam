@@ -1,5 +1,6 @@
 #include "ParkingLot.h"
 #include <vector>
+#include <algorithm>
 namespace MtmParkingLot {
 
     ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) :
@@ -81,45 +82,27 @@ namespace MtmParkingLot {
 
     ostream &operator<<(ostream &os, const ParkingLot &parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(os);
-        ParkedVehicle **print_array = new ParkedVehicle *[parkingLot.parking_array.getSize()];
+        std::vector<ParkedVehicle> print_array;
         for (unsigned int i = 0; i < parkingLot.parking_array.getSize(); i++) {
-            print_array[i] = nullptr;
+            if(parkingLot.parking_array[i]== nullptr) continue;
+            print_array.push_back(*(parkingLot.parking_array[i]));
         }
-        for (unsigned int i = 0; i < (parkingLot.parking_array.getSize()); i++) {
-            ParkedVehicle *const vehicle = parkingLot.parking_array[i];
-            if (vehicle == nullptr) continue;
-            switch (vehicle->getParkingSpot().getParkingBlock()) {
-                case MOTORBIKE: {
-                    print_array[vehicle->getParkingSpot().getParkingNumber() - 1] = vehicle;
-                    break;
-                }
-                case HANDICAPPED: {
-                    unsigned int index_shift = (parkingLot.total_num_of_motorbike_spots);
-                    print_array[(vehicle->getParkingSpot().getParkingNumber() + index_shift - 1)] = vehicle;
-                    break;
-                }
-                case CAR: {
-                    unsigned int index_shift = (parkingLot.total_num_of_motorbike_spots +
-                                                parkingLot.total_num_of_handicapped_spots - 1);
-                    print_array[vehicle->getParkingSpot().getParkingNumber() + index_shift] = vehicle;
-                    break;
-                }
-            }
-        }
-        for (unsigned int i = 0; i < (parkingLot.parking_array.getSize()); i++) {
-            if (print_array[i] == nullptr) continue;
-            ParkingLotPrinter::printVehicle(os, (*print_array[i]).getVehicleType(), (*print_array[i]).getPlateNum(),
-                                            (*print_array[i]).getTime());
-            ParkingLotPrinter::printParkingSpot(os, (*print_array[i]).getParkingSpot());
 
+        sort(print_array.begin(),print_array.end());
+        //reverse(print_array.begin(),print_array.end()-1);
+        for (ParkedVehicle& car : print_array)
+        {
+            ParkingLotPrinter::printVehicle(os, car.getVehicleType(), car.getPlateNum(),
+                                            car.getTime());
+            ParkingLotPrinter::printParkingSpot(os, car.getParkingSpot());
         }
-        delete[] print_array;
         return os;
+
 
     }
 
     unsigned int ParkingLot::pickParkingIndex(VehicleType park_here) {
-        unsigned int index_shift = 1;
+        unsigned int index_shift =0;
         switch (park_here) {
             case CAR: {
                 index_shift += total_num_of_car_spots;
