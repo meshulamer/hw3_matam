@@ -37,7 +37,7 @@ unsigned int UniqueArray<Element, Compare>::insert(const Element& element) {
     int freeIndex = NO_FREE_INDEX;
     Compare compare;
     for(int currentindex = 0; currentindex < size; currentindex++) {
-        if(array[currentindex] == nullptr) freeIndex = currentindex;
+        if(array[currentindex] == nullptr && (freeIndex == NO_FREE_INDEX)) freeIndex = currentindex;
         else if(compare(*(array[currentindex]), element)) return currentindex;
     }
     if(freeIndex == NO_FREE_INDEX) throw UniqueArrayIsFullException();

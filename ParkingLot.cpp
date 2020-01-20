@@ -3,16 +3,8 @@
 #include <algorithm>
 namespace MtmParkingLot {
 
-    ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) :
-            total_num_of_motorbike_spots(parkingBlockSizes[MOTORBIKE]),
-            total_num_of_handicapped_spots(parkingBlockSizes[HANDICAPPED]),
-            total_num_of_car_spots(parkingBlockSizes[CAR]),
-            parking_array(parkingBlockSizes[0] + parkingBlockSizes[1] + parkingBlockSizes[2]) {
-        for (int i = 0; i < NUMBER_OF_UNIQUE_CARS; i++) {
-            parking_spots[i] = parkingBlockSizes[i];
-        }
-    }
-
+    ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]): Motorbike_Parking(parkingBlockSizes[0]),
+    Handicapped_Parking(parkingBlockSizes[1], Private_Car_Parking(parkingBlockSizes[2])){}
     ParkingLot::~ParkingLot() = default;
 
     ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime) {

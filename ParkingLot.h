@@ -16,11 +16,9 @@ namespace MtmParkingLot {
     using namespace ParkingLotUtils;
     using std::ostream;
     class ParkingLot {
-        const unsigned int total_num_of_motorbike_spots;
-        const unsigned int total_num_of_handicapped_spots;
-        const unsigned int total_num_of_car_spots;
-        ParkingArray parking_array;
-        unsigned int parking_spots[NUMBER_OF_UNIQUE_CARS];
+        ParkingArray Motorbike_Parking;
+        ParkingArray Handicapped_Parking;
+        ParkingArray Private_Car_Parking;
 
     public:
         explicit ParkingLot(unsigned int parkingBlockSizes[]);

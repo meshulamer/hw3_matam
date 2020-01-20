@@ -21,16 +21,10 @@ private:
     const string plate_num;
     const Time start_time;
     bool fined;
-    ParkingSpot parking_spot;
 public:
     ParkedVehicle(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
     explicit ParkedVehicle(LicensePlate licensePlate);
     ~ParkedVehicle() = default;
-    struct areVehiclesTheSame {
-        bool operator()(const ParkedVehicle &v1, const ParkedVehicle &v2) const {
-            return (v1.plate_num == v2.plate_num);
-        }
-    };
     bool operator==(const ParkedVehicle& vehicle) const;
     void setParkingSpot(VehicleType parking_spot_type, unsigned int index);
     int price_calc(Time exit_time) const;
