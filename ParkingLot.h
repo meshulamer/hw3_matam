@@ -7,9 +7,12 @@
 #include <string.h>
 #include "ParkedVehicle.h"
 #include "ParkingLotPrinter.h"
-#define DAY 24
-#define NUMBER_OF_UNIQUE_CARS 3
+#include <vector>
+#include <algorithm>
 
+#define DAY 24
+
+typedef std::vector<ParkedVehicle> VehicleVector;
 typedef UniqueArray <ParkedVehicle, std::equal_to<ParkedVehicle>> ParkingArray;
 namespace MtmParkingLot {
 
@@ -28,11 +31,18 @@ namespace MtmParkingLot {
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
         void inspectParkingLot(Time inspectionTime);
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
-        unsigned int pickParkingIndex(VehicleType park_here);
-        
+        void park_the_vehicle(ParkedVehicle& new_parked_car, VehicleType park_here);
+        void exit_car(ParkedVehicle about_to_exit);
+        const ParkedVehicle* getVehiclePointer(ParkedVehicle vehicle);
+        void printEntry(const ParkedVehicle& vehicle ,ParkingResult result);
     };
-    void printEntry(const ParkedVehicle& vehicle ,ParkingResult result);
-}
+
+    int blockInspection(ParkingArray block_array, Time inspectionTime);
+    const ParkedVehicle* vehicleExists(const ParkedVehicle* motorbike_parking, const ParkedVehicle* handicapped_parking,
+                      const ParkedVehicle* private_car_parking);
+    /*VehicleVector addArraysToVector(VehicleVector& print_array, ParkingArray& motorbike_array, ParkingArray& handicapped_array,
+                           ParkingArray& private_car_array);*/
+    }
 
 
 

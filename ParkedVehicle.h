@@ -21,21 +21,21 @@ private:
     const string plate_num;
     const Time start_time;
     bool fined;
+    ParkingSpot spot;
 public:
     ParkedVehicle(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
     explicit ParkedVehicle(LicensePlate licensePlate);
     ~ParkedVehicle() = default;
     bool operator==(const ParkedVehicle& vehicle) const;
-    void setParkingSpot(VehicleType parking_spot_type, unsigned int index);
     int price_calc(Time exit_time) const;
-    ParkingSpot getParkingSpot() const;
-    const VehicleType getVehicleType() const;
-    const string getPlateNum() const;
-    const Time getTime() const;
+    VehicleType getVehicleType() const;
+    string getPlateNum() const;
+    Time getTime() const;
     void giveTicket();
     bool isFined() const;
-    ParkedVehicle& operator=(const ParkedVehicle& vehicle);
-    friend bool operator< (const ParkedVehicle& vehicle1, const ParkedVehicle& vehicle2);
+    ParkedVehicle operator=(const ParkedVehicle& vehicle);
+    void setParkingSpot(VehicleType parkingBlock, unsigned int index);
+    ParkingSpot getSpot() const;
 };
 
 ParkedVehicle licensePlateToVehicle(LicensePlate licensePlate);

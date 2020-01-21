@@ -2,37 +2,27 @@
 
 using namespace ParkingLotUtils;
 bool ParkedVehicle::operator==(const ParkedVehicle& vehicle) const{
+
     return this->plate_num == vehicle.plate_num;
 }
 
 ParkedVehicle::ParkedVehicle(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime):
-    type(vehicleType), plate_num(licensePlate), start_time(entranceTime){
+    type(vehicleType), plate_num(licensePlate), start_time(entranceTime), spot(){
     fined = false;
 }
 ParkedVehicle::ParkedVehicle(LicensePlate licensePlate): type(FIRST), plate_num(licensePlate),  start_time() {
     fined = false;
 }
-
-void ParkedVehicle::setParkingSpot(const VehicleType parking_spot_type, const unsigned int index){
-    ParkingSpot spot(parking_spot_type , index);
-    parking_spot = spot;
-}
-ParkingSpot ParkedVehicle::getParkingSpot() const {
-    return parking_spot;
-}
-const VehicleType ParkedVehicle::getVehicleType() const{
+VehicleType ParkedVehicle::getVehicleType() const{
     return type;
 }
-const string ParkedVehicle::getPlateNum() const{
+string ParkedVehicle::getPlateNum() const{
     return plate_num;
 }
-const Time ParkedVehicle::getTime() const{
+Time ParkedVehicle::getTime() const{
     return start_time;
 }
-ParkedVehicle licensePlateToVehicle(LicensePlate licensePlate) {
-    ParkedVehicle vehicle(FIRST,licensePlate,Time());
-    return vehicle;
-}
+
 int ParkedVehicle::price_calc(Time exit_time) const {
     int total_price = 0;
     Time total_time = (exit_time - start_time);
@@ -76,12 +66,19 @@ bool ParkedVehicle::isFined() const{
     return fined;
 }
 
-bool operator< (const ParkedVehicle& vehicle1, const ParkedVehicle& vehicle2){
-    return (vehicle1.parking_spot < vehicle2.parking_spot);
+ParkedVehicle ParkedVehicle::operator=(const ParkedVehicle& vehicle){
+    ParkedVehicle new_car(vehicle.type, vehicle.plate_num,vehicle.start_time);
+    new_car.fined = vehicle.fined;
+    new_car.spot = vehicle.spot;
+    return new_car;
 }
 
-ParkedVehicle& ParkedVehicle::operator=(const ParkedVehicle& vehicle){
-    setParkingSpot(vehicle.parking_spot.getParkingBlock(),vehicle.parking_spot.getParkingNumber());
-    fined = vehicle.fined;
-    return *this;
+void ParkedVehicle::setParkingSpot(VehicleType parkingBlock, unsigned int index) {
+    ParkingSpot new_spot(parkingBlock, index);
+    spot = new_spot;
 }
+ParkingSpot ParkedVehicle::getSpot() const{
+    return spot;
+}
+
+
