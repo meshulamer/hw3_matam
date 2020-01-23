@@ -20,5 +20,4 @@ namespace ParkingLotUtils {
         return   (parkingSpot1.parkingBlock <  parkingSpot2.parkingBlock) ||
                 ((parkingSpot1.parkingBlock == parkingSpot2.parkingBlock) && (parkingSpot1.parkingNumber < parkingSpot2.parkingNumber));
     }
-
 }

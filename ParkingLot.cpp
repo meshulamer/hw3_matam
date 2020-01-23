@@ -1,5 +1,6 @@
 #include "ParkingLot.h"
 
+
 namespace MtmParkingLot {
     ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) : Motorbike_Parking(parkingBlockSizes[0]),
                                                                Handicapped_Parking(parkingBlockSizes[1]),
@@ -32,7 +33,7 @@ namespace MtmParkingLot {
             printEntry(new_parked_car, NO_EMPTY_SPOT);
             return NO_EMPTY_SPOT;
         }
-        park_the_vehicle(new_parked_car, park_here);
+        parkTheVehicle(new_parked_car, park_here);
         return SUCCESS;
     }
 
@@ -45,10 +46,10 @@ namespace MtmParkingLot {
             ParkingLotPrinter::printExitFailure(std::cout, licensePlate);
             return VEHICLE_NOT_FOUND;
         }
-        int total_payment = (*exitingVehicle).price_calc(exitTime);
+        int total_payment = (*exitingVehicle).priceCalculation(exitTime);
         ParkedVehicle about_to_exit(*exitingVehicle);
-        exit_car(*exitingVehicle);
-        ParkingLotPrinter::printVehicle(std::cout, about_to_exit.getVehicleType(), about_to_exit.getPlateNum(),
+        exitCar(*exitingVehicle);
+        ParkingLotPrinter::printVehicle(std::cout, about_to_exit.getVehicleType(), about_to_exit.getPlateNumber(),
                                         about_to_exit.getTime());
         ParkingLotPrinter::printExitSuccess(std::cout, about_to_exit.getSpot(), exitTime, total_payment);
         return SUCCESS;
@@ -60,7 +61,7 @@ namespace MtmParkingLot {
                                        Handicapped_Parking[vehicle],
                                        Private_Car_Parking[vehicle]);
         if (check_vehicle == nullptr) return VEHICLE_NOT_FOUND;
-        parkingSpot = vehicle.getSpot();
+        parkingSpot = (*check_vehicle).getSpot();
         return SUCCESS;
     }
 
@@ -70,49 +71,41 @@ namespace MtmParkingLot {
         ticketed_cars += blockInspection(Handicapped_Parking, inspectionTime);
         ticketed_cars += blockInspection(Private_Car_Parking, inspectionTime);
         ParkingLotPrinter::printInspectionResult(std::cout, inspectionTime, ticketed_cars);
+
     }
 
     ostream &operator<<(ostream &os, const ParkingLot &parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(os);
         VehicleVector print_array;
-        for (unsigned int i = 0; i < parkingLot.Motorbike_Parking.getSize(); i++) {
-            if (parkingLot.Motorbike_Parking[i] == nullptr) continue;
-            print_array.push_back(*(parkingLot.Motorbike_Parking[i]));
-        }
-        for (unsigned int i = 0; i < parkingLot.Handicapped_Parking.getSize(); i++) {
-            if (parkingLot.Handicapped_Parking[i] == nullptr) continue;
-            print_array.push_back(*(parkingLot.Handicapped_Parking[i]));
-        }
-        for (unsigned int i = 0; i < parkingLot.Private_Car_Parking.getSize(); i++) {
-            if (parkingLot.Private_Car_Parking[i] == nullptr) continue;
-            print_array.push_back(*(parkingLot.Private_Car_Parking[i]));
-        }
+        addArraysToVector(print_array, parkingLot.Motorbike_Parking , parkingLot.Handicapped_Parking,
+                          parkingLot.Private_Car_Parking);
+        sort(print_array.begin(),print_array.end());
         for (ParkedVehicle &car : print_array) {
-            ParkingLotPrinter::printVehicle(os, car.getVehicleType(), car.getPlateNum(),
+            ParkingLotPrinter::printVehicle(os, car.getVehicleType(), car.getPlateNumber(),
                                             car.getTime());
             ParkingLotPrinter::printParkingSpot(os, car.getSpot());
         }
         return os;
     }
 
-    void ParkingLot::printEntry(const ParkedVehicle &vehicle, ParkingResult result) {
+    void ParkingLot::printEntry(ParkedVehicle vehicle, ParkingResult result) {
 
         switch (result) {
             case SUCCESS: {
-                ParkingLotPrinter::printVehicle(std::cout, vehicle.getVehicleType(), vehicle.getPlateNum(),
+                ParkingLotPrinter::printVehicle(std::cout, vehicle.getVehicleType(), vehicle.getPlateNumber(),
                                                 vehicle.getTime());
                 ParkingLotPrinter::printEntrySuccess(std::cout, vehicle.getSpot());
                 break;
             }
             case NO_EMPTY_SPOT: {
-                ParkingLotPrinter::printVehicle(std::cout, vehicle.getVehicleType(), vehicle.getPlateNum(),
+                ParkingLotPrinter::printVehicle(std::cout, vehicle.getVehicleType(), vehicle.getPlateNumber(),
                                                 vehicle.getTime());
                 ParkingLotPrinter::printEntryFailureNoSpot(std::cout);
                 break;
             }
             case VEHICLE_ALREADY_PARKED: {
                 ParkingLotPrinter::printVehicle(std::cout, (*(getVehiclePointer(vehicle))).getVehicleType(),
-                        (*(getVehiclePointer(vehicle))).getPlateNum(),
+                        (*(getVehiclePointer(vehicle))).getPlateNumber(),
                                                 (*(getVehiclePointer(vehicle))).getTime());
                 ParkingLotPrinter::printEntryFailureAlreadyParked(std::cout,
                                                                   (*(getVehiclePointer(vehicle))).getSpot());
@@ -124,34 +117,34 @@ namespace MtmParkingLot {
         }
     }
 
-    void ParkingLot::park_the_vehicle(ParkedVehicle &new_parked_car, VehicleType park_here) {
+    void ParkingLot::parkTheVehicle(ParkedVehicle &new_parked_car, VehicleType park_here) {
         unsigned int index = -1;
         switch (park_here) {
             case (MOTORBIKE): {
                 Motorbike_Parking.insert(new_parked_car);
                 Motorbike_Parking.getIndex(new_parked_car, index);
-                (*Motorbike_Parking[index]).setParkingSpot(park_here,index);
-                printEntry(*Motorbike_Parking[index], SUCCESS);
+                (*Motorbike_Parking.getPointerByIndex(index)).setParkingSpot(park_here,index);
+                printEntry(*Motorbike_Parking.getPointerByIndex(index), SUCCESS);
                 break;
             }
             case (HANDICAPPED): {
                 Handicapped_Parking.insert(new_parked_car);
                 Handicapped_Parking.getIndex(new_parked_car, index);
-                (*Handicapped_Parking[index]).setParkingSpot(park_here,index);
-                printEntry(*Handicapped_Parking[index], SUCCESS);
+                (*Handicapped_Parking.getPointerByIndex(index)).setParkingSpot(park_here,index);
+                printEntry(*Handicapped_Parking.getPointerByIndex(index), SUCCESS);
                 break;
             }
             case (CAR): {
                 Private_Car_Parking.insert(new_parked_car);
                 Private_Car_Parking.getIndex(new_parked_car, index);
-                (*Private_Car_Parking[index]).setParkingSpot(park_here,index);
-                printEntry(*Private_Car_Parking[index], SUCCESS);
+                (*Private_Car_Parking.getPointerByIndex(index)).setParkingSpot(park_here,index);
+                printEntry(*Private_Car_Parking.getPointerByIndex(index), SUCCESS);
                 break;
             }
         }
     }
 
-    void ParkingLot::exit_car(ParkedVehicle about_to_exit) {
+    void ParkingLot::exitCar(ParkedVehicle about_to_exit) {
         switch (about_to_exit.getSpot().getParkingBlock()) {
             case (MOTORBIKE): {
                 Motorbike_Parking.remove(about_to_exit);
@@ -180,13 +173,13 @@ namespace MtmParkingLot {
         return nullptr;
     }
 
-    int blockInspection(ParkingArray block_array, Time inspectionTime) {
+    int blockInspection(ParkingArray& block_array, Time inspectionTime) {
         int ticketed_cars = 0;
         for (unsigned int i = 0; i < block_array.getSize(); i++) {
-            if (block_array[i] == nullptr) continue;
-            ParkedVehicle &inspected_car = *(block_array[i]);
-            Time total_parking_time = inspectionTime - inspected_car.getTime();
-            if ((!(inspected_car.isFined()) && (total_parking_time.toHours() > DAY))) {
+            if (block_array.getPointerByIndex(i) == nullptr) continue;
+            ParkedVehicle& inspected_car = *(block_array.getPointerByIndex(i));
+            Time total_parking_time = inspectionTime - (inspected_car).getTime();
+            if ((!(inspected_car).isFined()) && ((total_parking_time).toHours() > MAXIMUM_PARKING_HOURS)) {
                 inspected_car.giveTicket();
                 ticketed_cars++;
             }
@@ -201,4 +194,21 @@ namespace MtmParkingLot {
         if((vehicle_pointer = Private_Car_Parking[vehicle]) != nullptr) return vehicle_pointer;
         return nullptr;
     }
-}
+
+    void addArraysToVector(VehicleVector& print_array,const ParkingArray& motorbike_array,const ParkingArray& handicapped_array,
+                                   const ParkingArray& private_car_array){
+        for (unsigned int i = 0; i < private_car_array.getSize(); i++) {
+            if (private_car_array.getPointerByIndex(i)== nullptr) continue;
+            print_array.push_back(*(private_car_array.getPointerByIndex(i)));
+        }
+        for (unsigned int i = 0; i < motorbike_array.getSize(); i++) {
+            if (motorbike_array.getPointerByIndex(i) == nullptr) continue;
+            print_array.push_back(*(motorbike_array.getPointerByIndex(i)));
+        }
+        for (unsigned int i = 0; i < handicapped_array.getSize(); i++) {
+            if (handicapped_array.getPointerByIndex(i) == nullptr) continue;
+            print_array.push_back(*(handicapped_array.getPointerByIndex(i)));
+        }
+    }
+};
+

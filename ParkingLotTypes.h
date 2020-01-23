@@ -33,7 +33,8 @@ namespace ParkingLotUtils {
      * @return string corresponding to the VehicleType
      */
     inline string vehicleTypeToString(VehicleType vehicleType) {
-        static const string vehicleTypeNames[ParkingLotUtils::LAST-ParkingLotUtils::FIRST+1] = {"Motorbike", "Handicapped", "Car"};
+        static const string vehicleTypeNames[
+                LAST - FIRST + 1] = {"Motorbike", "Handicapped", "Car"};
         return vehicleTypeNames[vehicleType];
     }
 
